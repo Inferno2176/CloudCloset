@@ -31,10 +31,10 @@ export const getProductImageUrl = (product, index = 0) => {
   if (!product) return FALLBACK_PRODUCT_IMAGE;
 
   // Use pre-signed S3 URL if provided by backend for authorized private bucket viewing
-  if (index === 0 && product.presignedImageUrl) {
+  if (index === 0 && product.presignedImageUrl && typeof product.presignedImageUrl === "string" && !product.presignedImageUrl.startsWith("s3://")) {
     return product.presignedImageUrl;
   }
-  if (product.presignedGalleryUrls && product.presignedGalleryUrls[index - 1]) {
+  if (product.presignedGalleryUrls && product.presignedGalleryUrls[index - 1] && !product.presignedGalleryUrls[index - 1].startsWith("s3://")) {
     return product.presignedGalleryUrls[index - 1];
   }
 
@@ -47,8 +47,23 @@ export const getProductImageUrl = (product, index = 0) => {
     }
   }
 
-  // Reliable external CDN fallback
-  return product.images?.[index] || product.images?.[0] || FALLBACK_PRODUCT_IMAGE;
+  // Normalize images array (handles array or stringified JSON from database)
+  let imagesArr = product.images;
+  if (typeof imagesArr === "string") {
+    try {
+      imagesArr = JSON.parse(imagesArr);
+    } catch {
+      imagesArr = [imagesArr];
+    }
+  }
+
+  const rawImage = imagesArr?.[index] || imagesArr?.[0];
+  // Ensure we NEVER return an s3:// protocol URL directly to an <img> src
+  if (rawImage && typeof rawImage === "string" && !rawImage.startsWith("s3://")) {
+    return rawImage;
+  }
+
+  return FALLBACK_PRODUCT_IMAGE;
 };
 
 export const initialProducts = [

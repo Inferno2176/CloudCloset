@@ -370,56 +370,61 @@ export function ShopProvider({ children }) {
     navigateTo("role-selection");
   };
 
+  const refreshCatalogue = async () => {
+    try {
+      const data = await api.products.getAll();
+      if (Array.isArray(data?.products)) {
+        setProducts(data.products);
+        return data.products;
+      }
+    } catch (err) {
+      console.warn("Could not refresh product catalogue:", err);
+    }
+    return products;
+  };
+
   // Admin functions
   const addProduct = async (newProduct) => {
-    try {
-      const res = await api.admin.createProduct(newProduct);
-      if (res?.product) {
-        setProducts([res.product, ...products]);
-        showToast(`Garment "${newProduct.name}" added to catalog.`);
-        return res.product;
-      }
-    } catch (_err) {
-      // Offline fallback
+    const res = await api.admin.createProduct(newProduct);
+    if (res?.product) {
+      setProducts((prev) => [res.product, ...prev.filter((p) => p.id !== res.product.id)]);
+      showToast(`Garment "${newProduct.name}" added to catalog.`);
+      // Background refresh to guarantee full database sync
+      refreshCatalogue();
+      return res.product;
     }
-    const product = {
-      ...newProduct,
-      id: `cc-${Date.now().toString().slice(-4)}`,
-      rating: 5.0,
-      reviewCount: 1,
-      inStock: true
-    };
-    setProducts([product, ...products]);
-    showToast(`Garment "${product.name}" added to catalog.`);
-    return product;
+    throw new Error(res?.error || "Failed to create product in atelier database.");
   };
 
   const updateProductStock = async (id, newStock) => {
     try {
       await api.admin.updateStock(id, newStock);
-    } catch (_err) {
-      // Handled locally
+      setProducts((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, stockCount: newStock, inStock: newStock > 0 } : p))
+      );
+      showToast("Stock quantity updated.");
+    } catch (err) {
+      showToast(err.message || "Failed to update stock.", "error");
+      throw err;
     }
-    setProducts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, stockCount: newStock, inStock: newStock > 0 } : p))
-    );
-    showToast("Stock quantity updated.");
   };
 
   const deleteProduct = async (id) => {
     try {
       await api.admin.deleteProduct(id);
-    } catch (_err) {
-      // Handled locally
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+      showToast("Product deleted from atelier inventory.", "info");
+      refreshCatalogue();
+    } catch (err) {
+      showToast(err.message || "Failed to delete product.", "error");
+      throw err;
     }
-    setProducts((prev) => prev.filter((p) => p.id !== id));
-    showToast("Product deleted from atelier inventory.", "info");
   };
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       await api.admin.updateOrderStatus(orderId, newStatus);
-    } catch (_err) {
+    } catch {
       // Handled locally
     }
     setOrders((prev) =>
@@ -479,7 +484,8 @@ export function ShopProvider({ children }) {
         addProduct,
         updateProductStock,
         deleteProduct,
-        updateOrderStatus
+        updateOrderStatus,
+        refreshCatalogue
       }}
     >
       {children}

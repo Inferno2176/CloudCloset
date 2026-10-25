@@ -5,7 +5,23 @@ import ProductImage from "./ProductImage";
 export default function QuickViewModal() {
   const { quickViewProduct, setQuickViewProduct, addToCart, navigateToProduct, toggleWishlist, isWishlisted } = useShop();
   
-  const [selectedColor, setSelectedColor] = useState(quickViewProduct?.colors?.[0] || null);
+  const productColors = React.useMemo(() => {
+    if (!quickViewProduct?.colors) return [{ name: "Standard", hex: "#111111" }];
+    const cols = Array.isArray(quickViewProduct.colors) ? quickViewProduct.colors : (() => {
+      try { return JSON.parse(quickViewProduct.colors); } catch { return [{ name: "Standard", hex: "#111111" }]; }
+    })();
+    return cols.length > 0 ? cols : [{ name: "Standard", hex: "#111111" }];
+  }, [quickViewProduct?.colors]);
+
+  const productSizes = React.useMemo(() => {
+    if (!quickViewProduct?.sizes) return [{ size: "M", available: true }];
+    const szs = Array.isArray(quickViewProduct.sizes) ? quickViewProduct.sizes : (() => {
+      try { return JSON.parse(quickViewProduct.sizes); } catch { return [{ size: "M", available: true }]; }
+    })();
+    return szs.length > 0 ? szs : [{ size: "M", available: true }];
+  }, [quickViewProduct?.sizes]);
+
+  const [selectedColor, setSelectedColor] = useState(productColors[0]);
   const [selectedSize, setSelectedSize] = useState("M");
   const [quantity, setQuantity] = useState(1);
 
@@ -77,7 +93,7 @@ export default function QuickViewModal() {
                 Color: <span className="text-on-surface-variant font-normal">{selectedColor?.name}</span>
               </label>
               <div className="flex items-center gap-2">
-                {quickViewProduct.colors.map((c, i) => (
+                {productColors.map((c, i) => (
                   <button
                     key={i}
                     onClick={() => setSelectedColor(c)}
@@ -99,7 +115,7 @@ export default function QuickViewModal() {
                 Size
               </label>
               <div className="grid grid-cols-5 gap-1.5">
-                {quickViewProduct.sizes.map((s, idx) => (
+                {productSizes.map((s, idx) => (
                   <button
                     key={idx}
                     disabled={!s.available}

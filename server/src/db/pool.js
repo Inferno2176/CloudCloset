@@ -6,10 +6,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { newDb } from 'pg-mem';
 
-dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 let poolInstance = null;
 let memDb = null;

@@ -4,7 +4,7 @@ import { getPresignedViewUrl } from '../services/s3Service.js';
 
 const router = express.Router();
 
-function formatProductRow(row) {
+export function formatProductRow(row) {
   return {
     id: row.id,
     name: row.name,
@@ -91,7 +91,22 @@ router.get('/', async (req, res, next) => {
     }
 
     const result = await query(queryText, queryParams);
-    const products = result.rows.map(formatProductRow);
+    const products = await Promise.all(
+      result.rows.map(async (row) => {
+        const prod = formatProductRow(row);
+        if (prod.s3Key) {
+          try {
+            const presigned = await getPresignedViewUrl(prod.s3Key);
+            if (presigned) {
+              prod.presignedImageUrl = presigned;
+            }
+          } catch (_e) {
+            // Fallback cleanly to external images
+          }
+        }
+        return prod;
+      })
+    );
 
     res.json({
       success: true,

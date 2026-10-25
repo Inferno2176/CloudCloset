@@ -16,8 +16,26 @@ export default function ProductDetailPage() {
 
   const product = selectedProduct || products[0];
 
+  const productImages = React.useMemo(() => {
+    if (!product?.images) return [];
+    if (Array.isArray(product.images)) return product.images;
+    try {
+      return JSON.parse(product.images);
+    } catch {
+      return [product.images];
+    }
+  }, [product]);
+
+  const productColors = React.useMemo(() => {
+    if (!product?.colors) return [{ name: "Standard", hex: "#111111" }];
+    const cols = Array.isArray(product.colors) ? product.colors : (() => {
+      try { return JSON.parse(product.colors); } catch { return [{ name: "Standard", hex: "#111111" }]; }
+    })();
+    return cols.length > 0 ? cols : [{ name: "Standard", hex: "#111111" }];
+  }, [product]);
+
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
+  const [selectedColor, setSelectedColor] = useState(productColors[0]);
   const [selectedSize, setSelectedSize] = useState("M");
   const [quantity, setQuantity] = useState(1);
   const [pincode, setPincode] = useState("400001");
@@ -116,9 +134,9 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Thumbnail Strip */}
-            {product.images.length > 1 && (
+            {productImages.length > 1 && (
               <div className="grid grid-cols-4 gap-space-sm">
-                {product.images.map((imgUrl, idx) => (
+                {productImages.map((imgUrl, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(idx)}
@@ -175,7 +193,7 @@ export default function ProductDetailPage() {
                 </label>
               </div>
               <div className="flex items-center gap-space-sm">
-                {product.colors.map((c, idx) => (
+                {productColors.map((c, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedColor(c)}

@@ -20,10 +20,21 @@ export default function ProductImage({
 }) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [currentSrc, setCurrentSrc] = useState(() => {
+    return src || (product ? getProductImageUrl(product, imageIndex) : FALLBACK_PRODUCT_IMAGE);
+  });
+  const [fallbackAttempted, setFallbackAttempted] = useState(false);
   const imgRef = useRef(null);
 
-  // Determine initial image source
-  const primarySrc = src || (product ? getProductImageUrl(product, imageIndex) : FALLBACK_PRODUCT_IMAGE);
+  // Sync currentSrc when props change
+  useEffect(() => {
+    const initialSrc = src || (product ? getProductImageUrl(product, imageIndex) : FALLBACK_PRODUCT_IMAGE);
+    setCurrentSrc(initialSrc);
+    setIsLoading(true);
+    setHasError(false);
+    setFallbackAttempted(false);
+  }, [src, product, imageIndex]);
+
   const resolvedAlt = alt || product?.name || "CloudCloset Garment";
 
   useEffect(() => {
@@ -32,7 +43,35 @@ export default function ProductImage({
         setIsLoading(false);
       }
     }
-  }, [primarySrc]);
+  }, [currentSrc]);
+
+  const handleError = () => {
+    setIsLoading(false);
+    // If presigned URL failed to load, try secondary CDN fallback before giving up to SVG
+    if (!fallbackAttempted && product) {
+      let imagesArr = product.images;
+      if (typeof imagesArr === "string") {
+        try {
+          imagesArr = JSON.parse(imagesArr);
+        } catch {
+          imagesArr = [imagesArr];
+        }
+      }
+      const secondaryUrl = imagesArr?.[imageIndex] || imagesArr?.[0];
+      if (
+        secondaryUrl &&
+        typeof secondaryUrl === "string" &&
+        !secondaryUrl.startsWith("s3://") &&
+        secondaryUrl !== currentSrc
+      ) {
+        setFallbackAttempted(true);
+        setCurrentSrc(secondaryUrl);
+        return;
+      }
+    }
+    setHasError(true);
+    setCurrentSrc(FALLBACK_PRODUCT_IMAGE);
+  };
 
   return (
     <div className={`relative w-full overflow-hidden bg-surface-container ${aspectRatio} ${className}`}>
@@ -51,15 +90,12 @@ export default function ProductImage({
       {/* Actual image */}
       <img
         ref={imgRef}
-        src={hasError ? FALLBACK_PRODUCT_IMAGE : primarySrc}
+        src={hasError ? FALLBACK_PRODUCT_IMAGE : currentSrc}
         alt={resolvedAlt}
         loading={priority ? "eager" : "lazy"}
         decoding="async"
         onLoad={() => setIsLoading(false)}
-        onError={() => {
-          setIsLoading(false);
-          setHasError(true);
-        }}
+        onError={handleError}
         className={`w-full h-full object-cover object-center transition-all duration-500 ${
           isLoading ? "opacity-0 scale-95" : "opacity-100 scale-100"
         }`}

@@ -3,7 +3,8 @@ import { query } from '../db/pool.js';
 import { requireAdmin } from '../middleware/auth.js';
 import { upload } from '../middleware/upload.js';
 import { validateStockUpdate } from '../middleware/validation.js';
-import { uploadProductImage, deleteProductImage } from '../services/s3Service.js';
+import { uploadProductImage, deleteProductImage, getPresignedViewUrl } from '../services/s3Service.js';
+import { formatProductRow } from './productRoutes.js';
 
 const router = express.Router();
 
@@ -109,74 +110,129 @@ router.patch('/orders/:id/status', async (req, res, next) => {
 
 // POST /api/admin/products (Create a new product)
 router.post('/products', async (req, res, next) => {
-  try {
-    const {
-      name,
-      category,
-      gender = 'Men',
-      price,
-      originalPrice,
-      stockCount = 10,
-      provenance = '100% GOTS Organic',
-      description = '',
-      fabric = '',
-      care = '',
-      origin = 'Crafted in Indian Atelier',
-      colors = [],
-      sizes = [],
-      s3Key = null,
-      images = []
-    } = req.body;
+  const {
+    name,
+    category,
+    gender = 'Men',
+    price,
+    originalPrice,
+    stockCount = 10,
+    provenance = '100% GOTS Organic',
+    description = '',
+    fabric = '',
+    care = '',
+    origin = 'Crafted in Indian Atelier',
+    colors = [],
+    sizes = [],
+    s3Key = null,
+    images = []
+  } = req.body;
 
-    if (!name || !price) {
-      return res.status(400).json({
-        success: false,
-        error: 'Product name and price are required.'
-      });
+  if (!name || price === undefined || price === null || price === '') {
+    return res.status(400).json({
+      success: false,
+      error: 'Product name and price are required.'
+    });
+  }
+
+  const numPrice = parseInt(price, 10);
+  if (isNaN(numPrice) || numPrice <= 0) {
+    return res.status(400).json({
+      success: false,
+      error: 'Price must be a valid positive number.'
+    });
+  }
+
+  const id = `cc-${Date.now().toString().slice(-6)}-${Math.random().toString(36).slice(2, 6)}`;
+  let baseSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  if (!baseSlug) baseSlug = `garment-${id}`;
+
+  try {
+    // Ensure slug is unique
+    const slugCheck = await query('SELECT id FROM products WHERE slug = $1', [baseSlug]);
+    const slug = slugCheck.rows.length > 0 ? `${baseSlug}-${Date.now().toString().slice(-4)}` : baseSlug;
+
+    // Map category string to category_id using case-insensitive lookup
+    let categoryId = null;
+    let categoryName = category || 'Shirts';
+    if (category) {
+      const catRes = await query(
+        'SELECT id, name FROM categories WHERE LOWER(name) = LOWER($1) OR id = $1 LIMIT 1',
+        [category.trim()]
+      );
+      if (catRes.rows.length > 0) {
+        categoryId = catRes.rows[0].id;
+        categoryName = catRes.rows[0].name;
+      }
     }
 
-    const id = `cc-${Date.now().toString().slice(-4)}`;
-    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-
-    // Map category string to category_id
-    const catRes = await query('SELECT id FROM categories WHERE name = $1', [category]);
-    const categoryId = catRes.rows.length > 0 ? catRes.rows[0].id : null;
+    const parsedStock = parseInt(stockCount, 10);
+    const stock = isNaN(parsedStock) ? 10 : Math.max(0, parsedStock);
+    const origPrice = parseInt(originalPrice, 10) || numPrice + 500;
 
     const result = await query(
       `INSERT INTO products (
         id, name, slug, category_id, gender, price, original_price,
         stock_count, provenance, description, fabric, care, origin,
-        in_stock, colors, sizes, s3_key, images
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+        in_stock, is_new_arrival, colors, sizes, s3_key, images
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
       RETURNING *`,
       [
         id,
-        name,
+        name.trim(),
         slug,
         categoryId,
         gender,
-        parseInt(price, 10),
-        parseInt(originalPrice, 10) || parseInt(price, 10) + 500,
-        parseInt(stockCount, 10) || 10,
+        numPrice,
+        origPrice,
+        stock,
         provenance,
         description,
         fabric,
         care,
         origin,
-        parseInt(stockCount, 10) > 0,
+        stock > 0,
+        true, // is_new_arrival: freshly created garments appear in New Arrivals
         JSON.stringify(colors),
         JSON.stringify(sizes),
-        s3Key,
+        s3Key || null,
         JSON.stringify(images)
       ]
     );
 
+    const insertedRow = result.rows[0];
+    insertedRow.category_name = categoryName;
+    const formattedProduct = formatProductRow(insertedRow);
+
+    // Attach fresh presigned URL if product has an S3 key
+    if (formattedProduct.s3Key) {
+      try {
+        formattedProduct.presignedImageUrl = await getPresignedViewUrl(formattedProduct.s3Key);
+      } catch (_e) {
+        // Fallback to images[0]
+      }
+    }
+
     res.status(201).json({
       success: true,
       message: `Garment "${name}" created in inventory.`,
-      product: result.rows[0]
+      product: formattedProduct
     });
   } catch (err) {
+    // Safety handling for orphaned S3 object:
+    // If product creation failed in PostgreSQL and an S3 object was uploaded for this attempt,
+    // verify whether any other product references this s3Key before deleting it.
+    if (s3Key) {
+      try {
+        const refCheck = await query('SELECT id FROM products WHERE s3_key = $1 LIMIT 1', [s3Key]);
+        if (refCheck.rows.length === 0) {
+          console.warn(`[Orphan Cleanup] DB insertion failed for "${name}". Safely removing orphaned S3 key: "${s3Key}"`);
+          await deleteProductImage(s3Key);
+        }
+      } catch (cleanupErr) {
+        console.warn(`[Orphan Cleanup Warning] Could not remove orphaned S3 key "${s3Key}":`, cleanupErr.message);
+      }
+    }
     next(err);
   }
 });
@@ -259,14 +315,51 @@ router.post('/upload-image', upload.single('image'), async (req, res, next) => {
     const s3Key = `products/${productId}/${imageType}-${timestamp}.${ext}`;
 
     const uploadResult = await uploadProductImage(req.file.buffer, s3Key, req.file.mimetype);
+    const presignedUrl = uploadResult.presignedUrl || (await getPresignedViewUrl(uploadResult.key));
 
     res.json({
       success: true,
       message: 'Product photograph uploaded to Amazon S3 successfully.',
       s3Key: uploadResult.key,
       url: uploadResult.url,
+      presignedUrl,
       bucket: uploadResult.bucket,
       isMock: uploadResult.isMock
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/admin/cleanup-orphan (Safely cleanup orphaned S3 image if product creation fails or is cancelled)
+router.post('/cleanup-orphan', async (req, res, next) => {
+  try {
+    const { s3Key } = req.body;
+    if (!s3Key || typeof s3Key !== 'string') {
+      return res.status(400).json({
+        success: false,
+        error: 's3Key is required for orphan cleanup.'
+      });
+    }
+
+    // Safety check: Avoid deleting objects that might already be referenced by products
+    const refCheck = await query(
+      'SELECT id FROM products WHERE s3_key = $1 OR images::text LIKE $2 LIMIT 1',
+      [s3Key, `%${s3Key}%`]
+    );
+
+    if (refCheck.rows.length > 0) {
+      return res.status(400).json({
+        success: false,
+        error: `Cannot delete S3 key "${s3Key}": Referenced by existing product ${refCheck.rows[0].id}.`
+      });
+    }
+
+    await deleteProductImage(s3Key);
+
+    res.json({
+      success: true,
+      message: `Orphaned S3 object "${s3Key}" cleaned up successfully.`
     });
   } catch (err) {
     next(err);

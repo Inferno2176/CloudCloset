@@ -34,43 +34,139 @@ export default function AdminDashboard() {
   const [newImageUrl, setNewImageUrl] = useState("");
   const [imagePreview, setImagePreview] = useState("");
 
+  // S3 Image Upload & Submission State
+  const [uploadedS3Key, setUploadedS3Key] = useState("");
+  const [uploadedPresignedUrl, setUploadedPresignedUrl] = useState("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const resetAddForm = () => {
+    setNewName("");
+    setNewCategory("Shirts");
+    setNewGender("Men");
+    setNewPrice("");
+    setNewOriginalPrice("");
+    setNewStock("15");
+    setNewProvenance("100% GOTS Organic");
+    setNewDescription("");
+    setNewImageUrl("");
+    setImagePreview("");
+    setUploadedS3Key("");
+    setUploadedPresignedUrl("");
+    setUploadError("");
+    setFormError("");
+    setIsUploadingImage(false);
+    setIsSubmitting(false);
+  };
+
+  const handleCloseAddModal = async () => {
+    if (uploadedS3Key) {
+      try {
+        await api.admin.cleanupOrphan(uploadedS3Key);
+      } catch {
+        // Ignored during cancel
+      }
+    }
+    resetAddForm();
+    setIsAddModalOpen(false);
+  };
+
   // Handle local file image upload with backend / S3 streaming
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-      // Stream image to backend Amazon S3 upload endpoint
-      try {
-        const uploadRes = await api.admin.uploadImage(file, 'new-garment', 'primary');
-        if (uploadRes?.url || uploadRes?.s3Key) {
-          setNewImageUrl(uploadRes.url || uploadRes.s3Key);
-          showToast("Photograph uploaded to Amazon S3 storage.");
-        }
-      } catch (err) {
-        console.warn("Backend S3 upload fallback to local preview:", err.message);
-        setNewImageUrl(reader.result);
+    // Reset previous errors and keys
+    setUploadError("");
+    setFormError("");
+
+    // Client-side MIME validation
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      const errMsg = "Invalid format. Only JPEG, PNG, or WebP photographs are supported.";
+      setUploadError(errMsg);
+      showToast(errMsg, "error");
+      return;
+    }
+
+    // Client-side file size validation (5MB max)
+    const MAX_SIZE = 5 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      const errMsg = `File size (${(file.size / (1024 * 1024)).toFixed(1)}MB) exceeds 5MB limit.`;
+      setUploadError(errMsg);
+      showToast(errMsg, "error");
+      return;
+    }
+
+    // Generate responsive local preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+
+    setIsUploadingImage(true);
+
+    try {
+      const uploadRes = await api.admin.uploadImage(file, 'new-garment', 'primary');
+      if (uploadRes?.s3Key) {
+        setUploadedS3Key(uploadRes.s3Key);
+        const presignedUrl = uploadRes.presignedUrl || uploadRes.url;
+        setUploadedPresignedUrl(presignedUrl);
+        setNewImageUrl(presignedUrl);
+        setIsUploadingImage(false);
+        showToast("Photograph uploaded to Amazon S3 storage.");
+      } else {
+        throw new Error(uploadRes?.error || "Image upload failed. S3 key missing from response.");
       }
+    } catch (err) {
+      setIsUploadingImage(false);
+      setUploadedS3Key("");
+      setUploadedPresignedUrl("");
+      const errMsg = err.data?.error || err.message || "Failed to upload photograph to Amazon S3.";
+      setUploadError(errMsg);
+      showToast(errMsg, "error");
     }
   };
 
-  const handleCreateProduct = (e) => {
+  const handleCreateProduct = async (e) => {
     e.preventDefault();
-    if (!newName || !newPrice) return;
+    if (!newName.trim() || !newPrice) {
+      setFormError("Product name and price are required.");
+      return;
+    }
+
+    if (isUploadingImage) {
+      showToast("Please wait for the image upload to complete before publishing.", "info");
+      return;
+    }
+
+    if (uploadError) {
+      showToast("Please resolve the photograph error before publishing.", "error");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setFormError("");
+
+    // Build product payload
+    const parsedPrice = parseInt(newPrice, 10);
+    const parsedOrig = newOriginalPrice ? parseInt(newOriginalPrice, 10) : parsedPrice + 500;
+    const parsedStock = parseInt(newStock, 10) || 10;
+
+    const primaryImage = uploadedPresignedUrl || newImageUrl || "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=1000&auto=format&fit=crop";
 
     const newProd = {
-      name: newName,
-      slug: newName.toLowerCase().replace(/\s+/g, "-"),
+      name: newName.trim(),
+      slug: newName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
       category: newCategory,
       gender: newGender,
-      price: parseInt(newPrice) || 1999,
-      originalPrice: parseInt(newOriginalPrice) || parseInt(newPrice) + 500,
-      stockCount: parseInt(newStock) || 10,
-      provenance: newProvenance,
+      price: parsedPrice,
+      originalPrice: parsedOrig,
+      stockCount: parsedStock,
+      provenance: newProvenance || "100% GOTS Organic",
       description: newDescription || "Engineered with architectural drape and premium natural textile fibers.",
       fabric: "100% Organic certified fibers. Loomed in artisanal partner ateliers.",
       care: "Dry clean or gentle cold wash cycle.",
@@ -85,20 +181,33 @@ export default function AdminDashboard() {
         { size: "L", available: true },
         { size: "XL", available: true }
       ],
-      images: [
-        newImageUrl || "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=1000&auto=format&fit=crop"
-      ]
+      s3Key: uploadedS3Key || null,
+      images: [primaryImage]
     };
 
-    addProduct(newProd);
-    setIsAddModalOpen(false);
-    // Reset form
-    setNewName("");
-    setNewPrice("");
-    setNewOriginalPrice("");
-    setNewImageUrl("");
-    setImagePreview("");
-    setNewDescription("");
+    try {
+      await addProduct(newProd);
+      setIsSubmitting(false);
+      resetAddForm();
+      setIsAddModalOpen(false);
+    } catch (err) {
+      setIsSubmitting(false);
+      const errMsg = err.message || "Failed to create garment in catalogue.";
+      setFormError(errMsg);
+      showToast(errMsg, "error");
+
+      // Safe cleanup of orphaned S3 image if creation failed
+      if (uploadedS3Key) {
+        try {
+          await api.admin.cleanupOrphan(uploadedS3Key);
+          setUploadedS3Key("");
+          setUploadedPresignedUrl("");
+          showToast("Cleaned up orphaned image from S3 storage.", "info");
+        } catch (cleanupErr) {
+          console.warn("[Orphan Cleanup Notice]", cleanupErr.message);
+        }
+      }
+    }
   };
 
   // Edit Product Handlers
@@ -497,7 +606,7 @@ export default function AdminDashboard() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <div className="bg-surface max-w-3xl w-full border border-surface-variant p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button
-              onClick={() => setIsAddModalOpen(false)}
+              onClick={handleCloseAddModal}
               className="absolute top-4 right-4 text-primary hover:text-secondary"
             >
               <span className="material-symbols-outlined text-[20px]">close</span>
@@ -637,20 +746,35 @@ export default function AdminDashboard() {
                     <label className="font-semibold uppercase tracking-wider text-primary block mb-1">
                       Garment Photograph (3:4)
                     </label>
-                    <p className="text-[10px] text-outline mb-2">Upload image file or paste URL</p>
+                    <p className="text-[10px] text-outline mb-2">Upload JPEG/PNG/WebP (Max 5MB)</p>
 
                     <div className="mb-2">
                       <input
                         type="file"
-                        accept="image/*"
+                        accept="image/jpeg,image/png,image/webp"
                         onChange={handleImageUpload}
-                        className="text-[11px] text-outline file:mr-2 file:py-1 file:px-2 file:border file:border-surface-variant file:text-xs file:font-bold file:bg-surface file:text-primary hover:file:bg-surface-container-high"
+                        disabled={isUploadingImage}
+                        className="text-[11px] text-outline file:mr-2 file:py-1 file:px-2 file:border file:border-surface-variant file:text-xs file:font-bold file:bg-surface file:text-primary hover:file:bg-surface-container-high cursor-pointer disabled:opacity-50"
                       />
                     </div>
 
+                    {uploadError && (
+                      <div className="mb-2 p-2 bg-error/10 border border-error/30 text-error text-[11px] rounded flex items-start gap-1">
+                        <span className="material-symbols-outlined text-[14px] mt-0.5 shrink-0">error</span>
+                        <span>{uploadError}</span>
+                      </div>
+                    )}
+
+                    {uploadedS3Key && (
+                      <div className="mb-2 p-2 bg-green-500/10 border border-green-500/30 text-green-700 text-[10px] rounded flex items-start gap-1">
+                        <span className="material-symbols-outlined text-[14px] mt-0.5 shrink-0">verified</span>
+                        <span className="break-all font-mono">S3: {uploadedS3Key}</span>
+                      </div>
+                    )}
+
                     <input
                       type="url"
-                      placeholder="Or paste https:// image URL"
+                      placeholder="Or paste external https:// image URL"
                       value={newImageUrl}
                       onChange={(e) => {
                         setNewImageUrl(e.target.value);
@@ -661,11 +785,20 @@ export default function AdminDashboard() {
 
                     {/* Live Preview Box */}
                     <div className="relative aspect-[3/4] w-full bg-surface-container border border-surface-variant overflow-hidden flex items-center justify-center">
-                      {imagePreview || newImageUrl ? (
+                      {isUploadingImage ? (
+                        <div className="text-center p-4 text-primary animate-pulse flex flex-col items-center justify-center">
+                          <span className="material-symbols-outlined text-3xl animate-spin mb-1">sync</span>
+                          <span className="text-[10px] uppercase font-bold tracking-wider">Uploading to S3...</span>
+                        </div>
+                      ) : imagePreview || newImageUrl ? (
                         <img
                           src={imagePreview || newImageUrl}
                           alt="Preview"
                           className="w-full h-full object-cover"
+                          onError={() => {
+                            setImagePreview("");
+                            setUploadError("Image failed to render in preview.");
+                          }}
                         />
                       ) : (
                         <div className="text-center p-4 text-outline">
@@ -678,19 +811,41 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
+              {formError && (
+                <div className="p-2.5 bg-error/10 border border-error/30 text-error text-xs rounded flex items-start gap-1.5">
+                  <span className="material-symbols-outlined text-[16px] mt-0.5 shrink-0">warning</span>
+                  <span>{formError}</span>
+                </div>
+              )}
+
               <div className="flex items-center gap-3 pt-2">
                 <button
                   type="button"
-                  onClick={() => setIsAddModalOpen(false)}
-                  className="flex-1 border border-surface-variant py-2.5 uppercase font-bold text-primary hover:bg-surface-container-low"
+                  onClick={handleCloseAddModal}
+                  disabled={isSubmitting}
+                  className="flex-1 border border-surface-variant py-2.5 uppercase font-bold text-primary hover:bg-surface-container-low transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-primary text-white py-2.5 uppercase font-bold tracking-widest hover:bg-secondary"
+                  disabled={isUploadingImage || isSubmitting}
+                  className={`flex-1 py-2.5 uppercase font-bold tracking-widest transition-colors flex items-center justify-center gap-2 ${
+                    isUploadingImage || isSubmitting
+                      ? "bg-primary/50 text-white cursor-not-allowed"
+                      : "bg-primary text-white hover:bg-secondary"
+                  }`}
                 >
-                  Publish to Catalog
+                  {isSubmitting ? (
+                    <>
+                      <span className="material-symbols-outlined text-[16px] animate-spin">sync</span>
+                      Publishing...
+                    </>
+                  ) : isUploadingImage ? (
+                    "Uploading Image..."
+                  ) : (
+                    "Publish to Catalog"
+                  )}
                 </button>
               </div>
             </form>

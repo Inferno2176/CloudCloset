@@ -48,7 +48,7 @@ export default function ProductListingPage() {
         if (!product.isTrending) return false;
       } else if (categoryFilter === "Sale") {
         if (!product.originalPrice || product.originalPrice <= product.price) return false;
-      } else if (product.category !== categoryFilter) {
+      } else if (product.category?.toLowerCase() !== categoryFilter.toLowerCase()) {
         return false;
       }
     }

@@ -218,6 +218,12 @@ export const api = {
         method: 'POST',
         body: formData
       });
+    },
+    cleanupOrphan: async (s3Key) => {
+      return apiRequest('/admin/cleanup-orphan', {
+        method: 'POST',
+        body: JSON.stringify({ s3Key })
+      });
     }
   }
 };
