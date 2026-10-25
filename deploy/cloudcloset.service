@@ -1,0 +1,53 @@
+# ==============================================================================
+# CloudCloset Atelier — Systemd Service Unit File
+# File: /etc/systemd/system/cloudcloset.service
+# 
+# Installs as a system service on Amazon Linux 2023 / Ubuntu 22.04+ EC2 instances.
+# 
+# Setup:
+#   sudo cp deploy/cloudcloset.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable cloudcloset
+#   sudo systemctl start cloudcloset
+#   sudo systemctl status cloudcloset
+# ==============================================================================
+
+[Unit]
+Description=CloudCloset Atelier Luxury Apparel Production Service
+Documentation=https://github.com/shalomshaji/CloudCloset
+After=network.target
+
+[Service]
+Type=simple
+User=ec2-user
+Group=ec2-user
+WorkingDirectory=/home/ec2-user/CloudCloset
+ExecStart=/usr/bin/node /home/ec2-user/CloudCloset/server/src/index.js
+
+# Environment Configuration
+# File must have restrictive permissions (chmod 600 /home/ec2-user/CloudCloset/server/.env)
+EnvironmentFile=/home/ec2-user/CloudCloset/server/.env
+Environment=NODE_ENV=production
+Environment=PORT=5001
+
+# Restart Policy
+Restart=on-failure
+RestartSec=5s
+
+# Security Sandbox Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/home/ec2-user/CloudCloset/logs
+
+# Resource Limits
+LimitNOFILE=65536
+
+# Standard Output / Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=cloudcloset
+
+[Install]
+WantedBy=multi-user.target

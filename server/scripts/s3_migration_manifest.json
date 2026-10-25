@@ -1,0 +1,616 @@
+{
+  "generatedAt": "2026-10-25T08:52:03.081Z",
+  "bucket": "cloudcloset-atelier-assets-2026",
+  "region": "ap-southeast-2",
+  "mode": "dry-run",
+  "totalProducts": 60,
+  "statistics": {
+    "discovered": 60,
+    "eligible": 60,
+    "skipped": 0,
+    "uploaded": 60,
+    "failed": 0
+  },
+  "items": [
+    {
+      "productId": "cc-001",
+      "name": "Minimalist Ecru Linen Trench Coat",
+      "category": "Outerwear",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-001/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-002",
+      "name": "Architectural Wool-Blend Blazer",
+      "category": "Outerwear",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-002/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-003",
+      "name": "Raw Flax Linen Safari Jacket",
+      "category": "Outerwear",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-003/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-004",
+      "name": "Structured Wool Cocoon Cape Coat",
+      "category": "Outerwear",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-004/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-005",
+      "name": "Unlined Tailored Linen Blazer",
+      "category": "Outerwear",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-005/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-006",
+      "name": "Structured Japanese Selvedge Denim Jacket",
+      "category": "Outerwear",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-006/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-007",
+      "name": "Minimalist Mac Coat in Sandstone Cotton",
+      "category": "Outerwear",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-007/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-008",
+      "name": "Cropped Utility Canvas Harrington",
+      "category": "Outerwear",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-008/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-009",
+      "name": "Architectural Kimono Haori Coat",
+      "category": "Outerwear",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-009/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-010",
+      "name": "Minimalist Packable Technical Windbreaker",
+      "category": "Outerwear",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-010/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-011",
+      "name": "Oversized Structured Poplin Shirt",
+      "category": "Shirts",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-011/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-012",
+      "name": "Brutalist Relaxed Cuban Collar Shirt",
+      "category": "Shirts",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-012/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-013",
+      "name": "French Linen Band-Collar Tunic Shirt",
+      "category": "Shirts",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1520975954732-35dd22299614?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-013/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-014",
+      "name": "Heavy Cotton Poplin Workshirt",
+      "category": "Shirts",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-014/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-015",
+      "name": "Raw Silk-Cotton Fluid Evening Shirt",
+      "category": "Shirts",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-015/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-016",
+      "name": "Asymmetrical Drape Silk-Modal Blouse",
+      "category": "Shirts",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1564584217132-2271feaeb3c5?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-016/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-017",
+      "name": "Sculptural Balloon-Sleeve Poplin Blouse",
+      "category": "Shirts",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-017/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-018",
+      "name": "Cropped Boxy Linen Resort Shirt",
+      "category": "Shirts",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-018/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-019",
+      "name": "Minimalist Drop-Shoulder Oxford Shirt",
+      "category": "Shirts",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-019/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-020",
+      "name": "Crisp Atelier Studio Uniform Overshirt",
+      "category": "Shirts",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-020/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-021",
+      "name": "Pleated Tapered Chinos",
+      "category": "Trousers",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-021/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-022",
+      "name": "Wide-Leg Japanese Selvedge Denim",
+      "category": "Trousers",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-022/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-023",
+      "name": "Raw Edge Linen Drawstring Trousers",
+      "category": "Trousers",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-023/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-024",
+      "name": "Tailored Straight-Leg Tropical Wool Slacks",
+      "category": "Trousers",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-024/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-025",
+      "name": "Tailored Pleated Wide-Leg Trousers",
+      "category": "Trousers",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-025/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-026",
+      "name": "High-Rise Sculptural Barrel Trousers",
+      "category": "Trousers",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-026/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-027",
+      "name": "Fluid Sandwashed Silk Lounge Pants",
+      "category": "Trousers",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-027/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-028",
+      "name": "Cropped Cigarette Linen Trousers",
+      "category": "Trousers",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1506152983158-b4a74a01c721?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-028/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-029",
+      "name": "Relaxed Architectural Carpenter Trousers",
+      "category": "Trousers",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-029/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-030",
+      "name": "Pleated Easy-Fit Drawstring Chinos",
+      "category": "Trousers",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-030/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-031",
+      "name": "Heavyweight Mercerized Mock Neck",
+      "category": "Knitwear",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-031/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-032",
+      "name": "Fine-Gauge Extra-Fine Merino Polo",
+      "category": "Knitwear",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1550246140-5119ae4790b8?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-032/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-033",
+      "name": "Waffle-Knit Organic Cotton Cardigan",
+      "category": "Knitwear",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-033/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-034",
+      "name": "Chunky Fisherman Rib Wool Pullover",
+      "category": "Knitwear",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-034/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-035",
+      "name": "Brushed Alpaca Bouclé Jumper",
+      "category": "Knitwear",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-035/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-036",
+      "name": "Fine-Ribbed Cashmere Mock-Neck Top",
+      "category": "Knitwear",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1598554747436-c9293d6a588f?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-036/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-037",
+      "name": "Cocoon Open-Front Cardigan in Oatmeal",
+      "category": "Knitwear",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-037/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-038",
+      "name": "Sheer Open-Weave Linen Knit Sweater",
+      "category": "Knitwear",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-038/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-039",
+      "name": "Heavyweight Loopback Raglan Sweatshirt",
+      "category": "Knitwear",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-039/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-040",
+      "name": "Seamless Minimalist Boxy Knit Hoodie",
+      "category": "Knitwear",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-040/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-041",
+      "name": "Fluid Silk-Modal Slip Dress",
+      "category": "Dresses",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-041/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-042",
+      "name": "Architectural Tiered Linen Maxi Dress",
+      "category": "Dresses",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-042/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-043",
+      "name": "Structured Poplin Midi Shirt Dress",
+      "category": "Dresses",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-043/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-044",
+      "name": "Column Knit Minimalist Halter Dress",
+      "category": "Dresses",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-044/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-045",
+      "name": "Asymmetric Drape Raw Silk Gown",
+      "category": "Dresses",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-045/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-046",
+      "name": "Minimalist Pleated Apron Pinafore Dress",
+      "category": "Dresses",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-046/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-047",
+      "name": "Raw Flax Linen Wrap Kimono Dress",
+      "category": "Dresses",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-047/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-048",
+      "name": "Bias-Cut Satin Slip Midi Dress",
+      "category": "Dresses",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-048/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-049",
+      "name": "Sculptural Cotton Smock Tent Dress",
+      "category": "Dresses",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-049/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-050",
+      "name": "Sleeveless Poplin A-Line Day Dress",
+      "category": "Dresses",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-050/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-051",
+      "name": "Brutalist Leather Crossbody Pouch",
+      "category": "Accessories",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1524498250077-390f9e378fc0?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-051/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-052",
+      "name": "Heavyweight Waxed Canvas Market Tote",
+      "category": "Accessories",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-052/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-053",
+      "name": "Structured Architectural Leather Shoulder Tote",
+      "category": "Accessories",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-053/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-054",
+      "name": "Minimalist Full-Grain Saddle Leather Belt",
+      "category": "Accessories",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1556306535-0f09a537f0a3?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-054/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-055",
+      "name": "Washed Twill Minimalist Cap",
+      "category": "Accessories",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-055/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-056",
+      "name": "Handwoven Pashmina & Silk Scarf",
+      "category": "Accessories",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-056/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-057",
+      "name": "Handcrafted Mazzucchelli Acetate Sunglasses",
+      "category": "Accessories",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-057/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-058",
+      "name": "Sculptural Cast Brass Cuff Bracelet",
+      "category": "Accessories",
+      "gender": "Women",
+      "originalImageUrl": "https://images.unsplash.com/photo-1576053139778-7e32f2ae3cfd?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-058/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-059",
+      "name": "Mercerized Combed Cotton Socks (3-Pack)",
+      "category": "Accessories",
+      "gender": "Unisex",
+      "originalImageUrl": "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-059/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    },
+    {
+      "productId": "cc-060",
+      "name": "Compact Bifold Vegetable-Tanned Wallet",
+      "category": "Accessories",
+      "gender": "Men",
+      "originalImageUrl": "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=1200&q=85",
+      "targetS3Key": "products/cc-060/primary.webp",
+      "status": "dry_run_verified",
+      "reason": "Eligible for upload. Source URL validated."
+    }
+  ]
+}
